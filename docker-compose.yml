@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:17
+    container_name: jbillcore-db
+    environment:
+      POSTGRES_DB: jbillcore
+      POSTGRES_USER: jbillcore
+      POSTGRES_PASSWORD: jbillcore
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
