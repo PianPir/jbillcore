@@ -1,5 +1,5 @@
 # JBillCore
-
+(pre-MVP) 
 > **Self-hosted usage-based billing engine for Spring Boot apps**  
 > No cloud. No payments. Just events and invoices.
 
