@@ -39,8 +39,10 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-flyway</artifactId>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
+            <version>12.0.0</version>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
@@ -87,6 +89,17 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>12.0.0</version>
+                <configuration>
+                    <url>jdbc:postgresql://localhost:5432/jbillcore</url>
+                    <user>jbillcore</user>
+                    <password>jbillcore</password>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

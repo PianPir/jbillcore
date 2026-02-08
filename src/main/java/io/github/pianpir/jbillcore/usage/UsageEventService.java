@@ -8,31 +8,30 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
 public class UsageEventService {
 
     private final UsageEventRepository usageEventRepository;
 
     @Transactional
-    public UsageEvent saveUsageEvent(String idempotencyKey, UsageEventRequest request) {
-        try {
-            UsageEvent event = new UsageEvent();
-            event.setIdempotencyKey(idempotencyKey);
-            event.setCustomerId(request.customerId());
-            event.setFeatureKey(request.featureKey());
-            event.setAmount(request.amount());
-            event.setOccurredAt(Instant.now());
-
-            return usageEventRepository.save(event);
-
-        } catch (DataIntegrityViolationException ex) {
-            return usageEventRepository.findById(idempotencyKey)
-                    .orElseThrow(() -> new IllegalStateException("Unexpected: key not found after constraint violation"));
+    public UsageEvent recordUsageEvent(String idempotencyKey, UsageEventRequest request) {
+        Optional<UsageEvent> existing = usageEventRepository.findById(idempotencyKey);
+        if (existing.isPresent()) {
+            return existing.get();
         }
+
+        UsageEvent event = new UsageEvent();
+        event.setIdempotencyKey(idempotencyKey);
+        event.setCustomerId(request.customerId());
+        event.setFeatureKey(request.featureKey());
+        event.setAmount(request.amount());
+        event.setOccurredAt(Instant.now());
+
+        return usageEventRepository.save(event);
     }
 
 
